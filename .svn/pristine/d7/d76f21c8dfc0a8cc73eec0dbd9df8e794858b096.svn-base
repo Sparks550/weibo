@@ -1,0 +1,63 @@
+<?php
+
+
+
+Route::get('/', 'StaticPagesController@home')->name('home');
+Route::get('/help', 'StaticPagesController@help')->name('help');
+Route::get('/about', 'StaticPagesController@about')->name('about');
+
+Route::get('signup', 'UsersController@create')->name('signup');
+
+
+Route::resource('users', 'UsersController');
+
+Route::get('login', 'SessionsController@create')->name('login');
+Route::post('login', 'SessionsController@store')->name('login');
+Route::delete('logout', 'SessionsController@destroy')->name('logout');
+
+Route::get('signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+
+
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+
+Route::resource('statuses', 'StatusesController', ['only' => ['store','destroy']]);
+
+Route::get('/users/{user}/followings', 'UsersController@followings')->name('users.followings');
+Route::get('/users/{user}/followers', 'UsersController@followers')->name('users.followers');
+
+Route::post('/users/followers/{user}', 'FollowersController@store')->name('followers.store');
+Route::delete('/users/followers/{user}', 'FollowersController@destroy')->name('followers.destroy');
+
+//张江涛
+//评论
+Route::post('/comment', 'CommentController@store')->name('comment.content');
+//Route::get('/comment/{comment}', 'CommentController@show')->name('comment.content.show');
+/*Route::get('ajax', function () {
+    return view('/');
+});*/
+Route::get('/comment', 'CommentController@show')->name('comment.content');
+//回复
+Route::post('/reply', 'ReplyController@store')->name('reply.content');
+Route::get('/reply/{reply}', 'ReplyController@show')->name('reply.content.show');
+
+
+//董威
+//举报-dw
+Route::get('/report/{id?}', 'UsersController@report')->name('report');
+//存储举报信息-dw
+Route::post('report', 'UsersController@receiveReport')->name('receiveReport');
+
+//管理员界面-dw
+Route::get('adminlogin','AdminController@login')->name('AdminLogin');
+Route::post('adminlogin','AdminController@store')->name('AdminLogin');
+
+//王栋
+//点赞功能
+Route::get('/update/{id?}','LikeController@update')->name('like');
+
+//卢鹏
+//转发
+Route::post('repost', 'RepostController@repost')->name('repost');

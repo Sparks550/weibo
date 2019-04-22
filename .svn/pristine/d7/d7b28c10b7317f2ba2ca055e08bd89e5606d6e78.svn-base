@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Models\User;
+use App\Models\Status;
+use App\Models\Comment;
+
+class CommentController extends Controller
+{
+    public function store(Request $request)
+    {
+        //dd($request);
+        $this->validate($request, [
+            'comment_content' => 'required|max:140'
+        ]);
+
+        $data=Comment::create([
+           'content_id' => $request->content_id,
+           'comment_content' => $request->comment_content
+        ]);
+        //dd($request);
+        session()->flash('success', '评论成功！');
+
+        return redirect()->route('home');
+
+/*        return redirect()->route('comment.content.show', $data->content_id );*/
+    }
+
+ /*   public function show(Status $comment)
+    {
+        $content_id = $comment->id;
+        $Comment_content = Comment::where('content_id',$content_id)->get();
+        $user = User::find($comment->user_id);
+
+       //dd($user);
+
+        return view('comment.show', compact('comment', 'Comment_content', 'user'));
+
+    }*/
+
+    public function show()
+    {
+        $comment_id=$_GET['status_id'];
+
+        $Comment_content = Comment::where('content_id',$comment_id)->get();
+
+        return response()->json(array('Comment_content'=> $Comment_content), 200);
+
+
+    }
+
+
+
+}
